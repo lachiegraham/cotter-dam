@@ -50,11 +50,23 @@ def average_elevation(data_set):
 def slope(data_set, x_coordinate, y_coordinate):
     #have imported math for math.sqrt but if you can think of a better
     # way of solving this do whatever
-    
-    x_slope = data_set[x_coordinate-1][y_coordinate] - data_set[x_coordinate+1][y_coordinate]
-    y_slope = data_set[x_coordinate][y_coordinate-1] - data_set[x_coordinate][y_coordinate+1]
-    return math.sqrt((x_slope/10)**2+((y_slope/10)**2))
+    if x_coordinate == 0:
+        x_slope = (data_set[x_coordinate][y_coordinate] - data_set[x_coordinate+1][y_coordinate])/5
+    elif data_set[x_coordinate][y_coordinate] == data_set[-1][y_coordinate]:
+        x_slope = (data_set[x_coordinate-1][y_coordinate] - data_set[x_coordinate][y_coordinate])/5
+    else:
+        x_slope = (data_set[x_coordinate-1][y_coordinate] - data_set[x_coordinate+1][y_coordinate])/10
+        
+    if y_coordinate == 0:
+        y_slope = (data_set[x_coordinate][y_coordinate] - data_set[x_coordinate][y_coordinate+1])/5
+    elif data_set[x_coordinate][y_coordinate] == data_set[x_coordinate][-1]:
+        y_slope = (data_set[x_coordinate][y_coordinate-1] - data_set[x_coordinate][y_coordinate])/5
+    else:
+        y_slope = (data_set[x_coordinate][y_coordinate-1] - data_set[x_coordinate][y_coordinate+1])/10
+        
 
+    
+    return(math.sqrt((x_slope)**2+((y_slope)**2)))
 
 # Question 4
 def surface_area(data_set, x_coordinate, y_coordinate):
