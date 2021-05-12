@@ -52,17 +52,21 @@ def slope(data_set, x_coordinate, y_coordinate):
     # way of solving this do whatever
     if x_coordinate == 0:
         x_slope = (data_set[x_coordinate][y_coordinate] - data_set[x_coordinate+1][y_coordinate])/5
-    elif data_set[x_coordinate][y_coordinate] == data_set[-1][y_coordinate]:
+    elif x_coordinate == dataset.shape[0]-1:
         x_slope = (data_set[x_coordinate-1][y_coordinate] - data_set[x_coordinate][y_coordinate])/5
     else:
         x_slope = (data_set[x_coordinate-1][y_coordinate] - data_set[x_coordinate+1][y_coordinate])/10
         
     if y_coordinate == 0:
         y_slope = (data_set[x_coordinate][y_coordinate] - data_set[x_coordinate][y_coordinate+1])/5
-    elif data_set[x_coordinate][y_coordinate] == data_set[x_coordinate][-1]:
+    elif y_coordinate == dataset.shape[1]-1:
         y_slope = (data_set[x_coordinate][y_coordinate-1] - data_set[x_coordinate][y_coordinate])/5
     else:
         y_slope = (data_set[x_coordinate][y_coordinate-1] - data_set[x_coordinate][y_coordinate+1])/10
+        
+
+    
+    return(math.sqrt((x_slope)**2+((y_slope)**2)))
         
 
     
