@@ -12,6 +12,7 @@ Student Ids: u7300179 and u7309735
 #import csv
 import math
 import numpy as np
+import matplotlib.pyplot as plt
 
 # I hope we are allowed to import stuff otherwise have to redo q1
 # if can't then data = [line.split(',') for line in open(file)]
@@ -48,14 +49,104 @@ def average_elevation(data_set):
 
 # Question 3
 def slope(data_set, x_coordinate, y_coordinate):
-    #have imported math for math.sqrt but if you can think of a better
-    # way of solving this do whatever
-    pass
+    '''
 
+    Parameters
+    ----------
+    data_set : numpy array containing elevation data
+    
+    x_coordinate : Index number of an elevation point in a row.
+    
+    y_coordinate : Row number of an elevation point.
+        
+
+    Returns
+    -------
+    The total gradient of a particular point in the array. 
+
+    '''
+    
+    #Finding average slope in x direction (x_slope):
+    
+    #Edge cases: If the coordinate is in the first or last column, only the
+    #point itself and the point to the right (for first column) or left (for
+    #last column) can be used. Therefore, average gradient is found by 
+    #dividing by five.
+    if x_coordinate == 0:                    #First column.
+        x_slope = (data_set[y_coordinate][x_coordinate] 
+                   - data_set[y_coordinate][x_coordinate+1])/5    
+    elif x_coordinate == dataset.shape[1]-1: #Last Column.
+        x_slope = (data_set[y_coordinate][x_coordinate-1] 
+                   - data_set[y_coordinate][x_coordinate])/5
+        
+        
+    #When the column has other columns either side, the average gradient in
+    #the x direction is calculated by subtracting the points immediately
+    #left and right of the point in the array from each other and dividing by  
+    #ten as each point is five metres apart.   
+    else:
+        x_slope = (data_set[y_coordinate][x_coordinate-1] 
+                   - data_set[y_coordinate][x_coordinate+1])/10
+       
+        
+        
+    #Finding average slope in y direction (y_slope): 
+        
+    #Edge cases: If the coordinate is in the first or last row, only the
+    #point itself and the point below (for first row) or above (for second row)
+    #can be used. Therefore,average gradient is found by dividing by five.
+    if y_coordinate == 0:                      #First row.
+        y_slope = (data_set[y_coordinate][x_coordinate] 
+                   - data_set[y_coordinate+1][x_coordinate])/5
+    elif y_coordinate == dataset.shape[0]-1:   #Last row.
+        y_slope = (data_set[y_coordinate-1][x_coordinate] 
+                   - data_set[y_coordinate][x_coordinate])/5
+    
+        
+    
+    #When the row has other rows above and below, the average slope in
+    #the y direction is calculated by subtracting the points immediately
+    #above and below the point in the array and dividing by ten 
+    #as each point is five metres apart.    
+    else:
+        y_slope = (data_set[y_coordinate-1][x_coordinate] 
+                   - data_set[y_coordinate+1][x_coordinate])/10
+        
+
+    
+    #Return the 'total gradient' of a point according to the given formula.
+    return math.sqrt((x_slope)**2+((y_slope)**2))
+
+    
+    #Return the 'total gradient' of a point according to the given formula.
+    return math.sqrt((x_slope)**2+((y_slope)**2))
 
 # Question 4
 def surface_area(data_set, x_coordinate, y_coordinate):
-    pass
+    height_of_dam = data_set[y_coordinate][x_coordinate]
+    points_in_dam = 0
+    
+    '''the stuff below this is what will actually be used in the function'''
+    # for row in data_set:
+    #     for element in row:
+    #         if abs(element - height_of_dam) < 5:
+    #             points_in_dam += 1
+
+    '''the below stuff is for testing, it makes the drawing and all that'''
+    testData = []
+    for i in range(len(data_set)):
+        testData.append([])
+        for j in range(len(data_set[1])):
+            if abs(data_set[i][j] - height_of_dam) < 5 and abs(slope(data_set,x_coordinate,y_coordinate)) < 0.0008063 :
+                '''things you want to be part of the dam'''
+                testData[i].append(100)
+            else:
+                '''things that aren't dam'''
+                testData[i].append(200)
+    '''well actually this makes the drawing'''
+    plt.imshow(testData, cmap='hot', interpolation='nearest')
+    plt.show()
+    return points_in_dam
 
 
 # Question 5:
@@ -81,11 +172,17 @@ if __name__ == "__main__":
     min_elev = minimum_elevation(dataset)
     max_elev = maximum_elevation(dataset)
     ave_elev = average_elevation(dataset)
-    #slopey = slope(dataset, 100, 100)
+    slopey = slope(dataset, 794, 234)
+    surf_area = surface_area(dataset, 794, 234)
     print("minimum elevation: " + str(min_elev))
     print("maximum elevation: " + str(max_elev))
     print("average elevation: " + str(ave_elev))
+    print("slope at like (794,234): " + str(slopey))
+    print("surface area points: " + str(surf_area))
+    # uncomment the below code to create the heatmap
+    # plt.imshow(dataset, cmap='hot', interpolation='nearest')
+    # plt.show()
+
 
     
-    pass
     
