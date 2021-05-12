@@ -50,10 +50,10 @@ def average_elevation(data_set):
 def slope(data_set, x_coordinate, y_coordinate):
     #have imported math for math.sqrt but if you can think of a better
     # way of solving this do whatever
-    data = read_dataset(data_set)
-    x_slope = data[x_coordinate-1][y_coordinate] - data[x_coordinate+1][y_coordinate]
-    y_slope = data[x_coordinate][y_coordinate-1] - data[x_coordinate][y_coordinate+1]
-    return math.sqrt((x_slope/10)**2+((y_slope/10)**2))
+    
+    x_slope = data_set[x_coordinate-1][y_coordinate] - data_set[x_coordinate+1][y_coordinate]
+    y_slope = data_set[x_coordinate][y_coordinate-1] - data_set[x_coordinate][y_coordinate+1]
+    return(math.sqrt((x_slope/10)**2+((y_slope/10)**2)))
 
 
 # Question 4
