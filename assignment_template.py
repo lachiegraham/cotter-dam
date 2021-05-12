@@ -114,7 +114,7 @@ def slope(data_set, x_coordinate, y_coordinate):
 
     
     #Return the 'total gradient' of a point according to the given formula.
-    return(math.sqrt((x_slope)**2+((y_slope)**2)))
+    return math.sqrt((x_slope)**2+((y_slope)**2))
 
 # Question 4
 def surface_area(data_set, x_coordinate, y_coordinate):
