@@ -84,11 +84,11 @@ if __name__ == "__main__":
     min_elev = minimum_elevation(dataset)
     max_elev = maximum_elevation(dataset)
     ave_elev = average_elevation(dataset)
-    #slopey = slope(dataset, 100, 100)
+    slopey = slope(dataset, 100, 100)
     print("minimum elevation: " + str(min_elev))
     print("maximum elevation: " + str(max_elev))
     print("average elevation: " + str(ave_elev))
-
+    print("slope at (100, 100): " + str(slopey))
     
-    pass
+    
     
