@@ -7,10 +7,7 @@ The assignment is due at 9:00am on Monday 24 May.
 Please include the student IDs of all members of your group here
 Student Ids: u7300179 and u7309735
 """
-#     HEY
-#     HEEEEYYYYYY
-#    Put your uni id up in the green
-#    THen delete these comments thanks
+
 
 #import csv
 import math
