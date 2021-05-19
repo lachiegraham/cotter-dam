@@ -137,7 +137,8 @@ def surface_area(data_set, x_coordinate, y_coordinate):
     for i in range(len(data_set)):
         testData.append([])
         for j in range(len(data_set[1])):
-            if abs(data_set[i][j] - height_of_dam) < 5 and abs(slope(data_set,x_coordinate,y_coordinate)) < 0.0008063 :
+            if abs(data_set[i][j] - height_of_dam) < 5 and is_flat(data_set,x_coordinate,y_coordinate) :
+            #if is_flat(data_set,x_coordinate,y_coordinate) :
                 '''things you want to be part of the dam'''
                 testData[i].append(100)
             else:
@@ -148,6 +149,28 @@ def surface_area(data_set, x_coordinate, y_coordinate):
     plt.show()
     return points_in_dam
 
+def is_flat(data_set, x_coordinate, y_coordinate):
+    temp_x_flatness = True
+    temp_y_flatness = True
+    size_of_plane = 15
+    grahamnumber = 0.2160001
+    if x_coordinate <size_of_plane or x_coordinate > (data_set.shape[1] -(size_of_plane +1)):
+        return False
+    if y_coordinate <size_of_plane or y_coordinate > (data_set.shape[0] -(size_of_plane+1)):
+        return False
+    for x_coord in range(x_coordinate - size_of_plane, x_coordinate + size_of_plane):
+        if abs(data_set[y_coordinate][x_coordinate] - data_set[y_coordinate][x_coord]) < grahamnumber:
+            temp_x_flatness = temp_x_flatness
+        else:
+            return False
+    
+    for y_coord in range (y_coordinate - size_of_plane, y_coordinate + size_of_plane):
+        if abs(data_set[y_coordinate][x_coordinate] - data_set[y_coord][x_coordinate]) < grahamnumber:
+            temp_y_flatness = temp_y_flatness
+        else:
+            return False
+            
+    return True
 
 # Question 5:
 def expanded_surface_area(data_set, water_level, x_coordinate, y_coordinate):
