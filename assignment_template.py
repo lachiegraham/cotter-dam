@@ -75,7 +75,7 @@ def slope(data_set, x_coordinate, y_coordinate):
     if x_coordinate == 0:                    #First column.
         x_slope = (data_set[y_coordinate][x_coordinate] 
                    - data_set[y_coordinate][x_coordinate+1])/5    
-    elif x_coordinate == dataset.shape[1]-1: #Last Column.
+    elif x_coordinate == data_set.shape[1]-1: #Last Column.
         x_slope = (data_set[y_coordinate][x_coordinate-1] 
                    - data_set[y_coordinate][x_coordinate])/5
         
@@ -98,7 +98,7 @@ def slope(data_set, x_coordinate, y_coordinate):
     if y_coordinate == 0:                      #First row.
         y_slope = (data_set[y_coordinate][x_coordinate] 
                    - data_set[y_coordinate+1][x_coordinate])/5
-    elif y_coordinate == dataset.shape[0]-1:   #Last row.
+    elif y_coordinate == data_set.shape[0]-1:   #Last row.
         y_slope = (data_set[y_coordinate-1][x_coordinate] 
                    - data_set[y_coordinate][x_coordinate])/5
     
@@ -122,23 +122,23 @@ def slope(data_set, x_coordinate, y_coordinate):
     return math.sqrt((x_slope)**2+((y_slope)**2))
 
 # Question 4
-def flat_or_not(data_set, x_coordinate, y_coordinate):
+def is_flat(data_set, x_coordinate, y_coordinate):
     temp_x_flatness = True
     temp_y_flatness = True
     size_of_plane = 2
     grahamnumber = 0.9
-    if x_coordinate <size_of_plane or x_coordinate > (dataset.shape[1] -(size_of_plane +1)):
+    if x_coordinate <size_of_plane or x_coordinate > (data_set.shape[1] -(size_of_plane +1)):
         return False
-    if y_coordinate <size_of_plane or y_coordinate > (dataset.shape[0] -(size_of_plane+1)):
+    if y_coordinate <size_of_plane or y_coordinate > (data_set.shape[0] -(size_of_plane+1)):
         return False
     for x_coord in range(x_coordinate - size_of_plane, x_coordinate + size_of_plane):
-        if abs(dataset[y_coordinate][x_coordinate] - dataset[y_coordinate][x_coord]) < grahamnumber:
+        if abs(data_set[y_coordinate][x_coordinate] - data_set[y_coordinate][x_coord]) < grahamnumber:
             temp_x_flatness = temp_x_flatness
         else:
             return False
     
     for y_coord in range (y_coordinate - size_of_plane, y_coordinate + size_of_plane):
-        if abs(dataset[y_coordinate][x_coordinate] - dataset[y_coord][x_coordinate]) < grahamnumber:
+        if abs(data_set[y_coordinate][x_coordinate] - data_set[y_coord][x_coordinate]) < grahamnumber:
             temp_y_flatness = temp_y_flatness
         else:
             return False
@@ -160,7 +160,7 @@ def surface_area(data_set, x_coordinate, y_coordinate):
         for i in range(len(data_set[1])):
             if i > 650 and j > 450 or i > 1100:
                 testData[j].append(200)
-            elif abs(data_set[j][i] - height_of_dam) < 5.5 and flat_or_not(data_set, i, j):
+            elif abs(data_set[j][i] - height_of_dam) < 5.5 and is_flat(data_set, i, j):
                 '''things you want to be part of the dam'''
                 points_in_dam += 1
                 testData[j].append(100)
@@ -168,32 +168,10 @@ def surface_area(data_set, x_coordinate, y_coordinate):
                 '''things that aren't dam'''
                 testData[j].append(200)
     '''well actually this makes the drawing'''
-    plt.imshow(testData, cmap='hot', interpolation='nearest')
-    plt.show()
-    return points_in_dam
+    #plt.imshow(testData, cmap='hot', interpolation='nearest')
+    #plt.show()
+    return points_in_dam * 25
 
-def is_flat(data_set, x_coordinate, y_coordinate):
-    temp_x_flatness = True
-    temp_y_flatness = True
-    size_of_plane = 15
-    grahamnumber = 0.2160001
-    if x_coordinate <size_of_plane or x_coordinate > (data_set.shape[1] -(size_of_plane +1)):
-        return False
-    if y_coordinate <size_of_plane or y_coordinate > (data_set.shape[0] -(size_of_plane+1)):
-        return False
-    for x_coord in range(x_coordinate - size_of_plane, x_coordinate + size_of_plane):
-        if abs(data_set[y_coordinate][x_coordinate] - data_set[y_coordinate][x_coord]) < grahamnumber:
-            temp_x_flatness = temp_x_flatness
-        else:
-            return False
-    
-    for y_coord in range (y_coordinate - size_of_plane, y_coordinate + size_of_plane):
-        if abs(data_set[y_coordinate][x_coordinate] - data_set[y_coord][x_coordinate]) < grahamnumber:
-            temp_y_flatness = temp_y_flatness
-        else:
-            return False
-            
-    return True
 
 # Question 5:
 def expanded_surface_area(data_set, water_level, x_coordinate, y_coordinate):
@@ -215,9 +193,9 @@ def expanded_surface_area(data_set, water_level, x_coordinate, y_coordinate):
                 '''things that aren't dam'''
                 testData[j].append(200)
     '''well actually this makes the drawing'''
-    plt.imshow(testData, cmap='hot', interpolation='nearest')
-    plt.show()
-    return points_in_dam
+    #plt.imshow(testData, cmap='hot', interpolation='nearest')
+    #plt.show()
+    return points_in_dam * 25
 
 
 
@@ -246,9 +224,9 @@ if __name__ == "__main__":
     print("maximum elevation: " + str(max_elev))
     print("average elevation: " + str(ave_elev))
     print("slope at like (794,234): " + str(slopey))
-    print("surface area points: " + str(surf_area))
-    print("surface area in acres"": " + str(surf_area*25*0.000247105))
-    print("surface area in acres when height increased to 550"": " + str(exp_area*25*0.000247105))
+    print("surface area points: " + str(surf_area/25))
+    print("surface area in acres: " + str(surf_area*0.000247105))
+    print("surface area in acres when height increased to 550: " + str(exp_area*0.000247105))
     # uncomment the below code to create the heatmap
     # plt.imshow(dataset, cmap='hot', interpolation='nearest')
     # plt.show()
