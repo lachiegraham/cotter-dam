@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 
 # Question 1:
 def read_dataset(file):
-    data = np.genfromtxt(file, delimiter=',')
+    data = np.genfromtxt(file, delimiter=',',dtype=np.dtype('f8'))
     return data
     # Format of data is 2d array i.e. first element is data[0][0]
     # This can be changed if necessary but I think it's good
@@ -117,9 +117,6 @@ def slope(data_set, x_coordinate, y_coordinate):
     #Return the 'total gradient' of a point according to the given formula.
     return math.sqrt((x_slope)**2+((y_slope)**2))
 
-    
-    #Return the 'total gradient' of a point according to the given formula.
-    return math.sqrt((x_slope)**2+((y_slope)**2))
 
 # Question 4
 def is_flat(data_set, x_coordinate, y_coordinate):
@@ -127,20 +124,16 @@ def is_flat(data_set, x_coordinate, y_coordinate):
     temp_y_flatness = True
     size_of_plane = 2
     grahamnumber = 0.9
-    if x_coordinate <size_of_plane or x_coordinate > (data_set.shape[1] -(size_of_plane +1)):
+    if x_coordinate < size_of_plane or x_coordinate > (data_set.shape[1] -(size_of_plane +1)):
         return False
-    if y_coordinate <size_of_plane or y_coordinate > (data_set.shape[0] -(size_of_plane+1)):
+    if y_coordinate < size_of_plane or y_coordinate > (data_set.shape[0] -(size_of_plane+1)):
         return False
     for x_coord in range(x_coordinate - size_of_plane, x_coordinate + size_of_plane):
-        if abs(data_set[y_coordinate][x_coordinate] - data_set[y_coordinate][x_coord]) < grahamnumber:
-            temp_x_flatness = temp_x_flatness
-        else:
+        if abs(data_set[y_coordinate][x_coordinate] - data_set[y_coordinate][x_coord]) >= grahamnumber:
             return False
     
     for y_coord in range (y_coordinate - size_of_plane, y_coordinate + size_of_plane):
-        if abs(data_set[y_coordinate][x_coordinate] - data_set[y_coord][x_coordinate]) < grahamnumber:
-            temp_y_flatness = temp_y_flatness
-        else:
+        if abs(data_set[y_coordinate][x_coordinate] - data_set[y_coord][x_coordinate]) >= grahamnumber:
             return False
             
     return True
@@ -201,35 +194,52 @@ def expanded_surface_area(data_set, water_level, x_coordinate, y_coordinate):
 
 # Question 6:
 def impute_missing_values(data_set):
-    pass
+    for j in range(len(data_set)):
+        for i in range(len(data_set[1])):
+            if data_set[j][i] < 0:
+                # edge cases
+                #print("before: " + str(data_set[j][i]))
+                if i == 0 or i == data_set.shape[1]-1 or data_set[j][i+1] < 0:
+                    # left or right edge, take average of above and below
+                    data_set[j][i] = 0.5*(data_set[j-1][i] + data_set[j+1][i])
+                elif j == 0 or j == data_set.shape[0]-1 or data_set[j+1][i] < 0:
+                    #
+                    data_set[j][i] = 0.5*(data_set[j][i-1] + data_set[j][i+1])
+                else:
+                    # just take the average of the four surrounding points
+                    data_set[j][i] = 0.25*(data_set[j+1][i] + data_set[j-1][i] + data_set[j][i+1] + data_set[j][i-1])
+                #print("after: " + str(data_set[j][i]))
+    return data_set
 
 # You'll need to decide what other functions you want for Question 6
 # It should be clear from your code, what we need to do in order to produce the plot(s).
 
 
-# Code in the following if statement will only be executed when this file is run - not when it is imported.
-# If you want to use any of your functions (such as to answer questions) please write the code to
-# do so inside this if statement. We'll cover it in more detail in an upcoming lecture.
+
 if __name__ == "__main__":
-    # these values will need to be tested, probably by opening the
-    # csv file in excel and using it
-    dataset = read_dataset('elevation_data_small.csv')
-    min_elev = minimum_elevation(dataset)
-    max_elev = maximum_elevation(dataset)
-    ave_elev = average_elevation(dataset)
-    slopey = slope(dataset, 794, 234)
-    surf_area = surface_area(dataset, 794, 234)
-    exp_area = expanded_surface_area(dataset, 550, 794, 234)
-    print("minimum elevation: " + str(min_elev))
-    print("maximum elevation: " + str(max_elev))
-    print("average elevation: " + str(ave_elev))
-    print("slope at like (794,234): " + str(slopey))
-    print("surface area points: " + str(surf_area/25))
-    print("surface area in acres: " + str(surf_area*0.000247105))
-    print("surface area in acres when height increased to 550: " + str(exp_area*0.000247105))
+
+    # dataset = read_dataset('elevation_data_small.csv')
+    # min_elev = minimum_elevation(dataset)
+    # max_elev = maximum_elevation(dataset)
+    # ave_elev = average_elevation(dataset)
+    # slopey = slope(dataset, 794, 234)
+    # surf_area = surface_area(dataset, 794, 234)
+    # exp_area = expanded_surface_area(dataset, 550, 794, 234)
+    # print("minimum elevation: " + str(min_elev))
+    # print("maximum elevation: " + str(max_elev))
+    # print("average elevation: " + str(ave_elev))
+    # print("slope at like (794,234): " + str(slopey))
+    # print("surface area points: " + str(surf_area/25))
+    # print("surface area in acres: " + str(surf_area*0.000247105))
+    # print("surface area in acres when height increased to 550: " + str(exp_area*0.000247105))
     # uncomment the below code to create the heatmap
     # plt.imshow(dataset, cmap='hot', interpolation='nearest')
     # plt.show()
+    large_dataset = impute_missing_values(read_dataset('elevation_data_large.csv'))
+    # large_surf_area = surface_area(large_dataset, 2878, 242)
+    # print("surface area large data set in acres: " + str(large_surf_area*0.00247105))
+    plt.imshow(large_dataset, cmap='hot', interpolation='nearest')
+    plt.show()
 
 
     
