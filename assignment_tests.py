@@ -14,6 +14,18 @@ import pytest
 from assignment_template import *  # This will import all the functions from assignment_template.py
 
 
+# something like this
+# but with testing edge cases
+def test_maximum():
+    tests = (
+        ([[1,2,3],[4,5,6],[7,8,9]], 9.0, 
+        'maximum value is element [2][2], which has value 9'),
+        ([[-8],[-15],[-99]], -8.0,
+        'maximum value is element [0][0], which has value -8')
+    )
+    for data, correct, message in tests:
+        result = maximum_elevation(data)
+        assert abs(result - correct) < 1e-6, message
 
 
 """
