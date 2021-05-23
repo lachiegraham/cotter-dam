@@ -151,9 +151,9 @@ def surface_area(data_set, x_coordinate, y_coordinate):
     for j in range(len(data_set)):
         testData.append([])
         for i in range(len(data_set[1])):
-            if i > 650 and j > 450 or i > 1100:
-                testData[j].append(200)
-            elif abs(data_set[j][i] - height_of_dam) < 5.5 and is_flat(data_set, i, j):
+            #if i > 650 and j > 450 or i > 1100:
+            #    testData[j].append(200)
+            if abs(data_set[j][i] - height_of_dam) < 5.5 and is_flat(data_set, i, j):
                 '''things you want to be part of the dam'''
                 points_in_dam += 1
                 testData[j].append(100)
@@ -161,8 +161,8 @@ def surface_area(data_set, x_coordinate, y_coordinate):
                 '''things that aren't dam'''
                 testData[j].append(200)
     '''well actually this makes the drawing'''
-    #plt.imshow(testData, cmap='hot', interpolation='nearest')
-    #plt.show()
+    plt.imshow(testData, cmap='hot', interpolation='nearest')
+    plt.show()
     return points_in_dam * 25
 
 
@@ -186,8 +186,8 @@ def expanded_surface_area(data_set, water_level, x_coordinate, y_coordinate):
                 '''things that aren't dam'''
                 testData[j].append(200)
     '''well actually this makes the drawing'''
-    #plt.imshow(testData, cmap='hot', interpolation='nearest')
-    #plt.show()
+    # plt.imshow(testData, cmap='hot', interpolation='nearest')
+    # plt.show()
     return points_in_dam * 25
 
 
@@ -236,10 +236,10 @@ if __name__ == "__main__":
     # plt.imshow(dataset, cmap='hot', interpolation='nearest')
     # plt.show()
     large_dataset = impute_missing_values(read_dataset('elevation_data_large.csv'))
-    # large_surf_area = surface_area(large_dataset, 2878, 242)
-    # print("surface area large data set in acres: " + str(large_surf_area*0.00247105))
-    plt.imshow(large_dataset, cmap='hot', interpolation='nearest')
-    plt.show()
+    large_surf_area = surface_area(large_dataset, 2878, 242)
+    print("surface area large data set in acres: " + str(large_surf_area*0.000247105))
+    # plt.imshow(large_dataset, cmap='hot', interpolation='nearest')
+    # plt.show()
 
 
     
