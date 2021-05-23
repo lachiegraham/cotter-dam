@@ -10,56 +10,125 @@ Student Ids: u7300179 and u7309735
 """
 # maybe import unittest
 
+import sys
 import pytest
-from assignment_template import *  # This will import all the functions from assignment_template.py
+from assignment_template import *
 
 
-# something like this
-# but with testing edge cases
+
+
+def test_minimum():
+    tests = (
+        ([[1,2,3],[4,5,6],[7,8,9]], 1, 
+        'Minimum value is element [0][0], which has value 1'),
+        ([[-8],[-15],[-99]], -99,
+        'Minimum value is element [2][0], which has value -99'),
+        ([[1]], 1,
+        'Maximum value is element [0][0], which has value 1')
+    )
+    for data, correct, message in tests:
+        result = minimum_elevation(data)
+        assert abs(result - correct) < 1e-6, message  
+
+
 def test_maximum():
     tests = (
         ([[1,2,3],[4,5,6],[7,8,9]], 9.0, 
-        'maximum value is element [2][2], which has value 9'),
+        'Maximum value is element [2][2], which has value 9'),
         ([[-8],[-15],[-99]], -8.0,
-        'maximum value is element [0][0], which has value -8')
+        'Maximum value is element [0][0], which has value -8'),
+        ([[1]], 1,
+        'Maximum value is element [0][0], which has value 1')
     )
     for data, correct, message in tests:
         result = maximum_elevation(data)
         assert abs(result - correct) < 1e-6, message
 
 
-"""
-this is some testing stuff from question 6
-probably not going to be used but in the rare event
-we can find a use for it it's here
-"""
-def how_many_problems_does_each_point_in_the_large_dataset_have(data_set):
-    for j in range(len(data_set)):
-        for i in range(len(data_set[1])):
-            if data_set[j][i] < 0: # negative height is bad
-                bad_value = 0 # the accumulator
-                
-                if i == 0: # edge or corner
-                    bad_value += 1
-                if j == 0: # edge or corner
-                    bad_value += 1
-                if i == data_set.shape[1]-1: # edge or corner
-                    bad_value += 1
-                if j == data_set.shape[0]-1: # edge or corner
-                    bad_value += 1
-                
-                if j == data_set.shape[0]-1:
-                    if data_set[j-1][i] < 0: # if we at bottom edge check above
-                        bad_value += 1
-                elif data_set[j+1][i] < 0: # point has bad neigbour below it
-                    bad_value += 1
-                
-                if i == data_set.shape[1]-1:
-                    if data_set[j][i-1] < 0: # if we at right edge check to the left
-                        bad_value += 1
-                elif data_set[j][i+1] < 0: # point has bad neighbour to its right
-                    bad_value += 1
-                
-                if bad_value != 0:
-                    # if it prints something other than 1, panic
-                    print(bad_value)
+def test_average():
+    tests = (
+        ([[1,2,3],[4,5,6],[7,8,9]], 5.0, 
+        'Average value is 5'),
+        ([[-8],[-15],[-99]], (-122/3),
+        'Average value is (-122/3)'),
+        ([[1]], 1,
+        'Average value is element [0][0], which has value 1')
+    )
+    for data, correct, message in tests:
+        result = average_elevation(data)
+        assert abs(result - correct) < 1e-6, message
+        
+        
+def test_slope():
+    tests = (
+        ([[1,2,3],[4,5,6],[7,8,9]], 1, 1, math.sqrt(10)/5,
+        'Sample data set. Correct calculated by hand to be sqrt10 over 5.'),
+        (read_dataset('elevation_data_small.csv'), 0, 0, 0.2657204546134851,
+        'Edge case for when the first point in data is chosen. Correct calculated by hand.'),
+        (read_dataset('elevation_data_small.csv'), 794, 234, 0.0008062257748234812,
+        'Slope when on dam. Correct calculated by hand.'),
+        (read_dataset('elevation_data_small.csv'), 1188, 882, 0.37737986167784465,
+        'Edge case for when the last point in data is chosen. Correct calculated by hand.')
+        
+    )
+    for data, x_coord, y_coord, correct, message in tests:
+        result = slope(data, x_coord, y_coord)
+        assert abs(result - correct) < 1e-6, message
+        
+def test_flatness():
+    tests = (
+        (read_dataset('elevation_data_small.csv'), 794, 234, True,
+        'Surface of dam should return flat.'),
+        (read_dataset('elevation_data_small.csv'), 0, 0, False,
+        'Edge case for first point in data, not flat.'),
+        (read_dataset('elevation_data_small.csv'), 1188, 882, False,
+        'Edge case for last point in data, not flat.')
+        
+    )
+    for data, x_coord, y_coord, correct, message in tests:
+        result = is_flat(data, x_coord, y_coord)
+        assert result == correct, message
+        
+        
+def test_surface_area():
+    tests = (
+       ([[10,20,1,30,40],[220,66,1,301,123],[1,1,1,1,1],[44,55,1,66,77],[70,70,1,90,90]], 2, 2, 25,
+        'Only the 1 in the very centre would be considered part of the dam as it is surrounded by other 1s'),
+        ([[10,50,30],[33,77,199],[70,1,90]], 1, 1, 0,
+        'Edge case where none would be considered part of dam so return 0')
+    )
+    for data, x_coord, y_coord, correct, message in tests:
+        result = surface_area(data, x_coord, y_coord)
+        assert abs(result - correct) < 1e-6, message
+        
+def test_surface_area2():
+    tests = (
+        
+        (read_dataset('elevation_data_small.csv'), 794, 234, 700,
+        'Online resources suggest a surface area of 700 acres for the Cotter dam.'),
+        
+    )
+    for data, x_coord, y_coord, correct, message in tests:
+        result = surface_area(data, x_coord, y_coord)
+        assert abs(result*0.000247105 - correct) < 100, message
+        
+def test_expanded_area():
+    tests = (
+        (read_dataset('elevation_data_small.csv'), -1000, 794, 234, 3172825,
+        'Edge case for when elevation is decreased, should return normal surface area with no changes.'),
+        (read_dataset('elevation_data_small.csv'), 550, 794, 234, 3172825,
+        'When elevation is increased should return a greater surface area than normal.')
+        
+    )
+    for data, elevation, x_coord, y_coord, correct, message in tests:
+        result = expanded_surface_area(data, elevation, x_coord, y_coord)
+        assert abs(result - correct) < 1e-6 or result - correct >0, message
+
+        
+
+
+           
+                    
+                    
+if __name__ == '__main__':
+    pytest.main(sys.argv)
